@@ -17,7 +17,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-# db_drop_and_create_all()
+db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -29,7 +29,6 @@ CORS(app)
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks')
-@requires_auth
 def get_drinks():
     drinks = Drink.query.all()
     return jsonify({
@@ -47,6 +46,7 @@ def get_drinks():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks-detail')
+@requires_auth('get:drinks-detail')
 def get_drinks_detail():
     drinks = Drink.query.all()
     return jsonify({
@@ -65,6 +65,7 @@ def get_drinks_detail():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
 def create_drink():
     body = request.get_json()
     title = body.get('title')
@@ -91,6 +92,7 @@ def create_drink():
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<int:id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
 def update_drink(id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if not drink:
@@ -120,6 +122,7 @@ def update_drink(id):
         or appropriate status code indicating reason for failure
 '''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
 def delete_drink(id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if not drink:
@@ -176,11 +179,21 @@ def not_found(error):
 @TODO implement error handler for AuthError
     error handler should conform to general task above
 '''
-@app.errorhandler(AuthError)
-def AuthError(error):
-    response = jsonify(error)
-    response.status_code = error.status_code
-    return response
+# @app.errorhandler(AuthError)
+# def auth_error(error):
+#     return jsonify({
+#         "success": False,
+#         "error": error.status_code,
+#         "message": error.error['description']
+#     }), error.status_code
+
+
+
+# @app.errorhandler(AuthError)
+# def auth_error(error):
+#     response = jsonify(error)
+#     response.status_code = error.status_code
+#     return response
 
 # if __name__ == '__main__':
 #     app.run(debug=True, host='localhost', port='9000')
