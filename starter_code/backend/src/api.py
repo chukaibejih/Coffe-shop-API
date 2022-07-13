@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from .database.models import db_drop_and_create_all, setup_db, Drink
+from .database.models import db_drop_and_create_all, setup_db, Drink, db
 from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
@@ -17,7 +17,7 @@ CORS(app)
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 !! Running this funciton will add one
 '''
-db_drop_and_create_all()
+# db_drop_and_create_all()
 
 # ROUTES
 '''
@@ -31,10 +31,11 @@ db_drop_and_create_all()
 @app.route('/drinks')
 def get_drinks():
     drinks = Drink.query.all()
+    drinks_short = [drink.short() for drink in drinks]
     return jsonify({
         'success': True,
-        'drinks': [drink.short() for drink in drinks]
-    }), 200
+        'drinks': drinks_short
+    })
 
 
 '''
@@ -47,7 +48,7 @@ def get_drinks():
 '''
 @app.route('/drinks-detail')
 @requires_auth('get:drinks-detail')
-def get_drinks_detail():
+def get_drinks_detail(payload):
     drinks = Drink.query.all()
     return jsonify({
         'success': True,
@@ -66,7 +67,7 @@ def get_drinks_detail():
 '''
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
-def create_drink():
+def create_drink(payload):
     body = request.get_json()
     title = body.get('title')
     recipe = body.get('recipe')
@@ -93,7 +94,7 @@ def create_drink():
 '''
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def update_drink(id):
+def update_drink(payload, id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if not drink:
         abort(404)
@@ -123,7 +124,7 @@ def update_drink(id):
 '''
 @app.route('/drinks/<int:id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
-def delete_drink(id):
+def delete_drink(payload, id):
     drink = Drink.query.filter(Drink.id == id).one_or_none()
     if not drink:
         abort(404)

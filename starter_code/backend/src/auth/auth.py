@@ -1,22 +1,18 @@
 import json
-from os import environ as env
+import os 
 from flask import request, abort 
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 
 
-from dotenv import find_dotenv, load_dotenv
-
-ENV_FILE = find_dotenv()
-if ENV_FILE:
-   load_dotenv(ENV_FILE)
+from dotenv import load_dotenv
+load_dotenv
 
 
-AUTH0_DOMAIN = env.get("AUTH0_DOMAIN")
-ALGORITHMS = env.get("ALGORITHMS")
-APP_SECRET_KEY = env.get("APP_SECRET_KEY")
-API_AUDIENCE = env.get("API_AUDIENCE")
+AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+ALGORITHMS = os.getenv("ALGORITHMS")
+API_AUDIENCE = os.getenv("API_AUDIENCE")
 
 ## AuthError Exception
 '''
@@ -131,8 +127,9 @@ def verify_decode_jwt(token):
                 audience=API_AUDIENCE,
                 issuer='https://' + AUTH0_DOMAIN + '/'
             )
-
+            print(payload)
             return payload
+
 
         except jwt.ExpiredSignatureError:
             raise AuthError({
