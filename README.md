@@ -1,7 +1,7 @@
 ## Coffee Shop
  
 This project "Coffee Shop" is a new digitally enabled cafe for students to order drinks, socialize, and study hard. But they need help setting up their menu experience.
-It shows my knowledge about building APIs in Flask, I used [AUTH0](https://auth0.com/) in implementing Authentication, Authorization and Permissions. There are three main users
+It shows my knowledge about building APIs in Flask, I used  in implementing Authentication, Authorization and Permissions. There are three main users
 of this web application which are the public, the Barista and Manager. 
 
 This application will:
@@ -10,6 +10,8 @@ This application will:
 3. Allow the shop baristas to see the recipe information.
 4. Allow the shop managers to create new drinks and edit existing drinks and delete drinks.
 
+The authentication system used for this project is [AUTH0](https://auth0.com/). There is a logic to direct a user to the Auth0 login page, managing the JWT token upon successful callback, and handle setting and retrieving the token from the local store. This token is then consumed by the DrinkService and passed as an Authorization header when making requests to our backend. The Auth0 JWT includes claims for permissions based on the user's role within the Auth0 system. This project makes use of these claims using the auth.can(permission) method which checks if particular permissions exist within the JWT permissions claim of the currently logged in user. This 
+determines whether a button will be enabled or disabled on the frontend. 
 
 ## Coffee Shop Backend
 
