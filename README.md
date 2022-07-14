@@ -63,7 +63,7 @@ The `--reload` flag will detect file changes and restart the server automaticall
 
 
 ### Documentation 
-> View the [Trivia API Documentation](./backend/README.md)
+> View the [Coffee Shop API Documentation](https://documenter.getpostman.com/view/19466503/UzQuPQvg)
 
 
 ### Coffee Shop Frontend
